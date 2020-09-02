@@ -1,8 +1,8 @@
 *.abi
 *.log
 *.wasm
-!*abi.wasm
 dist
 build
 node_modules
-docker/contracts
+!docker/contracts/**/*.wasm
+!docker/contracts/**/*.abi

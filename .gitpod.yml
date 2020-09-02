@@ -1,4 +1,5 @@
-image: bradlhart/sample-return-values:v0.0.4
+image:
+  file: .gitpod.dockerfile
 
 ports:
 - port: 3000
@@ -15,6 +16,6 @@ ports:
 tasks:
 - before: cd webapp
   init: yarn
-  command: nginx -c $PWD/nginx.conf; npx webpack-dev-server
-- before: cleos wallet unlock --password </password
-  command: nodeos --config-dir ~/eosio/chain/config --data-dir ~/eosio/chain/data -e -p eosio --plugin eosio::chain_api_plugin --contracts-console
+  command: nginx -c $PWD/.gitpod.nginx.conf; yarn startInGitpod
+- before: $PWD/eosio/scripts/deploy_contracts.sh "" IS_GITPOD && cleos wallet unlock --password </password
+  command: nodeos --config-dir $PWD/eosio/chain/config --data-dir $PWD/eosio/chain/data -e -p eosio --plugin eosio::chain_api_plugin --contracts-console

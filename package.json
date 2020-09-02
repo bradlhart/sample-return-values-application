@@ -3,14 +3,20 @@
   "description": "Example Website",
   "main": "index.html",
   "scripts": {
-    "serve": "webpack-dev-server --mode development"
+    "start": "webpack-dev-server --mode development",
+    "startInGitpod": "REACT_APP_IS_GITPOD=true webpack-dev-server --mode development",
+    "lint": "eslint \"src/**/*.js{,?}\"",
+    "up": "docker-compose up",
+    "down": "docker-compose down && docker volume rm sample_return_values_eosiochaindata && docker image rm sample-return-values/eosio"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@blockone/eslint-config-blockone": "^3.0.0",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "css-loader": "^4.2.0",
+    "eslint": "^7.8.0",
     "source-map-loader": "^1.0.1",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.2",

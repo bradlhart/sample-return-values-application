@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 NODEOS_RUNNING=$1
+RUNNING_IN_GITPOD=$2
 
 set -m
 
@@ -8,11 +9,40 @@ set -m
 SYSTEM_ACCOUNT_PRIVATE_KEY="5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
 SYSTEM_ACCOUNT_PUBLIC_KEY="EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
 
-ROOT_DIR="/home/gitpod"
-CONTRACTS_DIR="$ROOT_DIR/contracts"
-BLOCKCHAIN_DATA_DIR=$ROOT_DIR/eosio/chain/data
-BLOCKCHAIN_CONFIG_DIR=$ROOT_DIR/eosio/chain/config
-WALLET_DIR="$ROOT_DIR/eosio-wallet"
+if [ -z "$RUNNING_IN_GITPOD" ]; then
+  echo "Running locally..."
+  ROOT_DIR="/opt"
+  CONTRACTS_DIR="$ROOT_DIR/eosio/bin/contracts"
+  BLOCKCHAIN_DATA_DIR=/root/.local/share
+  BLOCKCHAIN_CONFIG_DIR=/opt/eosio/bin/config-dir
+  WALLET_DIR="/root/eosio-wallet/"
+else
+  echo "Running in Gitpod..."
+  ROOT_DIR="/home/gitpod"
+  CONTRACTS_DIR="$ROOT_DIR/contracts"
+  BLOCKCHAIN_DATA_DIR=$ROOT_DIR/eosio/chain/data
+  BLOCKCHAIN_CONFIG_DIR=$ROOT_DIR/eosio/chain/config
+  WALLET_DIR="$ROOT_DIR/eosio-wallet"
+fi
+
+mkdir -p $ROOT_DIR/bin
+
+# Set PATH
+PATH="$PATH:$ROOT_DIR/bin:$ROOT_DIR/bin/scripts"
+GITPOD_WORKSPACE_ROOT="/workspace/tropical-example-web-app"
+CONFIG_DIR="$ROOT_DIR/bin/config-dir"
+
+function start_wallet {
+  echo "Starting the wallet"
+  rm -rf $WALLET_DIR
+  mkdir -p $WALLET_DIR
+  nohup keosd --unlock-timeout 999999999 --wallet-dir $WALLET_DIR --http-server-address 127.0.0.1:8900 2>&1 &
+  sleep 1s
+  wallet_password=$(cleos wallet create --to-console | awk 'FNR > 3 { print $1 }' | tr -d '"')
+  echo $wallet_password > "$CONFIG_DIR"/keys/default_wallet_password.txt
+
+  cleos wallet import --private-key $SYSTEM_ACCOUNT_PRIVATE_KEY
+}
 
 function post_preactivate {
   curl -X POST http://127.0.0.1:8888/v1/producer/schedule_protocol_feature_activations -d '{"protocol_features_to_activate": ["0ec7e080177b2c02b278d5088611686b49d739925a92d9bfcacd7fc6b74053bd"]}'
@@ -74,7 +104,7 @@ function create_account {
 }
 
 # Move into the executable directory
-cd $ROOT_DIR/
+cd $ROOT_DIR/bin/
 mkdir -p $CONFIG_DIR
 mkdir -p $BLOCKCHAIN_DATA_DIR
 mkdir -p $BLOCKCHAIN_CONFIG_DIR
@@ -109,6 +139,8 @@ done
 # Sleep for 2s to allow time for 4 blocks to be created so we have blocks to reference when sending transactions
 sleep 2s
 echo "Creating accounts and deploying contracts"
+
+start_wallet
 
 # preactivate concensus upgrades
 post_preactivate
