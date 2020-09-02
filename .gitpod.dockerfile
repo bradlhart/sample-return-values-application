@@ -1,4 +1,4 @@
-FROM bradlhart/sample-return-values:v0.0.4
+FROM bradlhart/sample-return-values:v0.0.5
 
 USER gitpod
 ENV ROOT_DIR="/home/gitpod"

@@ -1,3 +1,10 @@
+### Current Version: v0.0.5
+### Test:
+#### docker build --tag sample-return-values:test ./.docker
+#### docker run --publish 8888:8888 sample-return-values:test
+### Deploy:
+#### docker build --tag bradlhart/sample-return-values:v0.0.5 ./.docker
+#### docker push bradlhart/sample-return-values:v0.0.5
 FROM ubuntu:18.04
 
 ### base
