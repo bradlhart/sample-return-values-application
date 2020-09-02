@@ -1,20 +1,6 @@
 FROM bradlhart/sample-return-values:v0.0.5
 
 USER gitpod
-ENV ROOT_DIR="/home/gitpod"
-
-WORKDIR /home/gitpod
-RUN git clone https://github.com/EOSIO/eosio.cdt.git \
- && cd eosio.cdt \
- && git checkout eosio-cdt-2.1-staging-c \
- && git submodule update --init --recursive \
- && mkdir build \
- && cd build \
- && cmake -GNinja .. \
- && ninja -j8
-
-ENV PATH="/home/gitpod/eos/build/bin/:/home/gitpod/eosio.cdt/build/bin/:${PATH}"
-
 RUN echo "COPYING APP CONTRACTS"
 COPY ./.docker/contracts /home/gitpod/contracts
 COPY ./.docker/scripts/deploy_contracts.sh /home/gitpod/
@@ -37,9 +23,6 @@ USER gitpod
 RUN { echo && echo "PS1='\[\e]0;\u \w\a\]\[\033[01;32m\]\u\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \\\$ '" ; } >> .bashrc
 # use sudo so that user does not get sudo usage info on (the first) login
 RUN sudo echo "Running 'sudo' for Gitpod: success"
-
-RUN echo "DEPLOYING CONTRACTS"
-RUN /bin/bash /home/gitpod/deploy_contracts.sh
 
 ### checks
 # no root-owned files in the home directory
