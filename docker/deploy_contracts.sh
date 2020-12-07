@@ -148,17 +148,11 @@ cleos create account eosio returnvalue $SYSTEM_ACCOUNT_PUBLIC_KEY
 post_preactivate
 
 sleep 1s
-setabi eosio $CONTRACTS_DIR/eosio.bios-v1.8.3/eosio.bios.abi
-setcode eosio $CONTRACTS_DIR/eosio.bios-v1.8.3/eosio.bios.wasm
+setabi eosio $CONTRACTS_DIR/eosio.boot/eosio.boot.abi
+setcode eosio $CONTRACTS_DIR/eosio.boot/eosio.boot.wasm
 
 sleep 1s
 activate_feature "299dcb6af692324b899b39f16d5a530a33062804e41f09dc97e9f156b4476707"
-
-sleep 1s
-setabi eosio $CONTRACTS_DIR/eosio.bios/eosio.bios.abi
-setcode eosio $CONTRACTS_DIR/eosio.bios/eosio.bios.wasm
-
-sleep 1s
 activate_feature "825ee6288fb1373eab1b5187ec2f04f6eacb39cb3a97f356a07c91622dd61d16"
 activate_feature "c3a6138c5061cf291310887c0b5c71fcaffeab90d5deb50d3b9e687cead45071"
 activate_feature "4e7bf348da00a945489b2a681749eb56f5de00b900014e137ddae39f48f69d67"
@@ -172,10 +166,15 @@ activate_feature "ef43112c6543b88db2283a2e077278c315ae2c84719a8b25f25cc88565fbea
 activate_feature "4a90c00d55454dc5b059055ca213579c6ea856967712a56017487886a4d4cc0f"
 activate_feature "1a99a59d87e06e09ec5b028a9cbb7749b4a5ad8819004365d02dc4379a8b7241"
 activate_feature "bf61537fd21c61a60e542a5d66c3f6a78da0589336868307f94a82bccea84e88"
+activate_feature "5443fcf88330c586bc0e5f3dee10e7f63c76c00249c87fe4fbf7f38c082006b4"
 
 sleep 1s
-cleos set abi returnvalue $CONTRACTS_DIR/action_return_value/action_return_value.abi -p returnvalue@active -p eosio@active
-cleos set code returnvalue $CONTRACTS_DIR/action_return_value/action_return_value.wasm -p returnvalue@active -p eosio@active
+setabi eosio $CONTRACTS_DIR/eosio.bios/eosio.bios.abi
+setcode eosio $CONTRACTS_DIR/eosio.bios/eosio.bios.wasm
+
+sleep 1s
+setabi returnvalue $CONTRACTS_DIR/action_return_value/action_return_value.abi
+setcode returnvalue $CONTRACTS_DIR/action_return_value/action_return_value.wasm
 
 echo "All done initializing the blockchain"
 

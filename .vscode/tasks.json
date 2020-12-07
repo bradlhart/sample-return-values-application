@@ -8,29 +8,21 @@
 			"group": "build"
 		},
 		{
-			"label": "Build Contract with CMake/Make",
-			"type": "shell",
-			"options": {
-				"cwd": "${workspaceRoot}/contracts/action_return_value/build"
-			},
-			"group": "build",
-			"dependsOn": ["make"]
-		},
-		{
 			"label": "cmake",
 			"type": "shell",
 			"options": {
 				"cwd": "${workspaceRoot}/contracts/action_return_value/build"
 			},
-			"command": "cmake ..",
+			"command": "cmake .."
 		},
 		{
-			"label": "make",
+			"label": "Build Contract with CMake/Make",
 			"type": "shell",
 			"command": "make",
 			"options": {
 				"cwd": "${workspaceRoot}/contracts/action_return_value/build"
 			},
+			"group": "build",
 			"dependsOn":["cmake"]
 		}
 	]
