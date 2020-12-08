@@ -43,6 +43,9 @@ jobs:
       - name: Audit
         run: |
           yarn audit
+      - name: Install cypress
+        run: |
+          npm i -g cypress
       - name: Test
         uses: cypress-io/github-action@6e9b583c9652e99b72b042a3957980fc6166efae
         with:
