@@ -43,15 +43,6 @@ jobs:
       - name: Audit
         run: |
           yarn audit
-      - name: Install cypress
-        run: |
-          npm i -g cypress
-      - name: Test
-        uses: cypress-io/github-action@6e9b583c9652e99b72b042a3957980fc6166efae
-        with:
-          spec: cypress/integration/index.spec.js
-          start: yarn serve
-          wait-on: http://localhost:8080
       - name: Get Protected Status
         if: github.event_name == 'push'
         id: protected_step
@@ -65,6 +56,15 @@ jobs:
           git config --global user.email 'blockone-devops@users.noreply.github.com'
           git commit package.json yarn.lock -m "Updating package.json and yarn.lock" || echo "Nothing to commit"
           git push origin ${GITHUB_REF#refs/*/}
+      - name: Install Cypress
+        run: |
+          yarn add --dev cypress
+      - name: Test
+        uses: cypress-io/github-action@6e9b583c9652e99b72b042a3957980fc6166efae
+        with:
+          spec: cypress/integration/index.spec.js
+          start: yarn serve
+          wait-on: http://localhost:8080
     services:
       nodeos:
         image: eosio/eosjs-ci:v0.2.7
